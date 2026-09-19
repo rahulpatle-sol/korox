@@ -7,7 +7,7 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/rahulpatle-sol/korox"
 homepage = "https://github.com/rahulpatle-sol/korox"
 documentation = "https://docs.rs/cargo-korox"
-keywords = ["lint", "analyzer", "code-quality", "rust", "clippy", "developer-tools"]
+keywords = ["lint", "analyzer", "code-quality", "rust", "clippy"]
 categories = ["development-tools", "development-tools::debugging", "development-tools::profiling"]
 readme = "README.md"
 
