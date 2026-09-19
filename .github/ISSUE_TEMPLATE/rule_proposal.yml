@@ -1,0 +1,96 @@
+name: New Rule Proposal
+description: Propose a new lint rule for cargo-korox
+title: "[Rule]: "
+labels: ["rule-proposal", "enhancement"]
+body:
+  - type: input
+    id: rule-name
+    attributes:
+      label: Rule Name (kebab-case)
+      description: e.g., unnecessary-clone, blocking-in-async
+      placeholder: my-new-rule
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Ownership & Borrowing
+        - Error Handling
+        - Performance
+        - Async / Tokio
+        - Security
+        - Code Hygiene
+        - Framework Specific
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Default Severity
+      options:
+        - deny (error, fails --strict)
+        - warn (warning, shows in summary)
+        - suggestion (info, suggestion only)
+        - allow (disabled by default)
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What does it detect?
+      description: Clear description of the pattern
+      placeholder: Detects when...
+    validations:
+      required: true
+  - type: textarea
+    id: bad-example
+    attributes:
+      label: ❌ Bad Code Example
+      description: Code that should trigger the rule
+      render: rust
+      placeholder: |
+        fn bad() {
+            // problematic pattern
+        }
+    validations:
+      required: true
+  - type: textarea
+    id: good-example
+    attributes:
+      label: ✅ Good Code Example
+      description: Corrected version
+      render: rust
+      placeholder: |
+        fn good() {
+            // fixed pattern
+        }
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested Fix
+      description: What should the user change it to?
+      placeholder: Use `&data` instead of `data.clone()`
+    validations:
+      required: true
+  - type: textarea
+    id: false-positives
+    attributes:
+      label: Known False Positives
+      description: Cases where this rule shouldn't trigger
+      placeholder: Legitimate uses of this pattern...
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: Not already covered by clippy
+          required: true
+        - label: Not already covered by rustc
+          required: true
+        - label: Has clear actionable fix
+          required: true
+        - label: Tested with real codebases
