@@ -1,5 +1,5 @@
 use crate::cli::{Cli, Commands};
-use crate::commands::{run_check, run_explain};
+use crate::commands::{run_check, run_fix, run_explain};
 use crate::config::{run_init, run_config};
 use anyhow::Result;
 use clap::Parser;
@@ -26,13 +26,8 @@ fn main() -> Result<()> {
             }
         }
         crate::cli::Commands::Fix(args) => {
-            println!("{} Fix not yet implemented", "→".cyan());
-            let diagnostics = run_check(&args.path, cli.json, cli.quiet, args.changed)?;
-            if cli.strict && !diagnostics.is_empty() {
-                1
-            } else {
-                0
-            }
+            run_fix(&args.path, cli.json, cli.quiet, args.changed)?;
+            0
         }
         crate::cli::Commands::Explain(args) => {
             run_explain(&args.rule)?;

@@ -41,9 +41,92 @@ pub fn run_check(path: &PathBuf, json: bool, quiet: bool, changed: bool) -> Resu
     Ok(all_diagnostics)
 }
 
-pub fn run_fix(path: &PathBuf, json: bool, quiet: bool) -> Result<()> {
-    println!("{} Fix not yet implemented", "→".cyan());
-    run_check(path, json, quiet, false)?;
+pub fn run_fix(path: &PathBuf, json: bool, quiet: bool, changed: bool) -> Result<()> {
+    let files = if changed {
+        crate::scanner::get_all_changed_files(path)?
+    } else {
+        crate::scanner::scan_project(path)?
+    };
+    
+    if files.is_empty() {
+        println!("{} No Rust files found", "ℹ".cyan());
+        return Ok(());
+    }
+
+    let mut total_fixes = 0;
+    
+    for file in &files {
+        let content = std::fs::read_to_string(file)?;
+        let mut new_content = content.clone();
+        let mut file_fixes = 0;
+        
+        let lines: Vec<String> = content.lines().map(|s| s.to_string()).collect();
+        
+        for (i, line) in lines.iter().enumerate() {
+            let trimmed = line.trim();
+            
+            if (trimmed.starts_with("let ") || trimmed.starts_with("let mut ")) && 
+               !trimmed.starts_with("//") &&
+               trimmed.contains(" = ") &&
+               !trimmed.contains("_") {
+                let after_let = if trimmed.starts_with("let mut ") {
+                    &trimmed[8..]
+                } else {
+                    &trimmed[4..]
+                };
+                let var_name = after_let.split(" = ").next()
+                    .and_then(|s| s.split(':').next())
+                    .map(|s| s.trim());
+                
+                if let Some(name) = var_name {
+                    if !name.starts_with('_') {
+                        let usage_count = content.matches(name).count();
+                        if usage_count == 1 {
+                            let old_pattern = format!("let {}", name);
+                            let new_pattern = format!("let _{}", name);
+                            if new_content.contains(&old_pattern) {
+                                new_content = new_content.replacen(&old_pattern, &new_pattern, 1);
+                                file_fixes += 1;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if trimmed.contains(".clone().clone()") && !trimmed.starts_with("//") {
+                let new_line = line.replace(".clone().clone()", ".clone()");
+                new_content = new_content.replace(line, &new_line);
+                file_fixes += 1;
+            }
+            
+            if trimmed.contains(".clone().to_string()") && !trimmed.starts_with("//") {
+                let new_line = line.replace(".clone().to_string()", ".to_string()");
+                new_content = new_content.replace(line, &new_line);
+                file_fixes += 1;
+            }
+            
+            if trimmed.contains(".clone()") && (trimmed.contains("String::from") || trimmed.contains(".to_owned()")) && !trimmed.starts_with("//") {
+                if line.contains(".clone().to_owned()") {
+                    let new_line = line.replace(".clone().to_owned()", ".to_owned()");
+                    new_content = new_content.replace(line, &new_line);
+                    file_fixes += 1;
+                }
+            }
+        }
+        
+        if file_fixes > 0 && new_content != content {
+            std::fs::write(file, &new_content)?;
+            println!("{} Fixed {} issues in {}", "✓".green(), file_fixes, file.display());
+            total_fixes += file_fixes;
+        }
+    }
+    
+    if total_fixes > 0 {
+        println!("\n{} Total fixes applied: {}", "✓".green().bold(), total_fixes);
+    } else {
+        println!("{} No auto-fixable issues found", "ℹ".cyan());
+    }
+    
     Ok(())
 }
 
