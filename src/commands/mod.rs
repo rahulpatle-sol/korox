@@ -93,21 +93,21 @@ pub fn run_fix(path: &PathBuf, json: bool, quiet: bool, changed: bool) -> Result
                 }
             }
             
-            if trimmed.contains(".clone().clone()") && !trimmed.starts_with("//") {
-                let new_line = line.replace(".clone().clone()", ".clone()");
+            if trimmed.contains(".clone()") && !trimmed.starts_with("//") {
+                let new_line = line.replace(".clone()", ".clone()");
                 new_content = new_content.replace(line, &new_line);
                 file_fixes += 1;
             }
             
-            if trimmed.contains(".clone().to_string()") && !trimmed.starts_with("//") {
-                let new_line = line.replace(".clone().to_string()", ".to_string()");
+            if trimmed.contains(".to_string()") && !trimmed.starts_with("//") {
+                let new_line = line.replace(".to_string()", ".to_string()");
                 new_content = new_content.replace(line, &new_line);
                 file_fixes += 1;
             }
             
             if trimmed.contains(".clone()") && (trimmed.contains("String::from") || trimmed.contains(".to_owned()")) && !trimmed.starts_with("//") {
-                if line.contains(".clone().to_owned()") {
-                    let new_line = line.replace(".clone().to_owned()", ".to_owned()");
+                if line.contains(".to_owned()") {
+                    let new_line = line.replace(".to_owned()", ".to_owned()");
                     new_content = new_content.replace(line, &new_line);
                     file_fixes += 1;
                 }
@@ -224,8 +224,8 @@ pub fn run_explain(rule_name: &str) -> Result<()> {
             println!("{}", "redundant-clone".bold().underline());
             println!("\nDetects redundant clones like double clone or clone + to_string.");
             println!("\nExample:");
-            println!("  let s = data.clone().clone();");
-            println!("  let s = data.clone().to_string();");
+            println!("  let s = data.clone();");
+            println!("  let s = data.to_string();");
             println!("\nBetter:");
             println!("  let s = data.clone();");
             println!("  let s = data.to_string();");

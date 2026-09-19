@@ -488,8 +488,8 @@ impl Rule for RedundantCloneRule {
         for (i, line) in ctx.lines.iter().enumerate() {
             let trimmed = line.trim();
             
-            if trimmed.contains(".clone().clone()") && !trimmed.starts_with("//") {
-                let column = line.find(".clone().clone()").unwrap_or(0) + 1;
+            if trimmed.contains(".clone()") && !trimmed.starts_with("//") {
+                let column = line.find(".clone()").unwrap_or(0) + 1;
                 diagnostics.push(Diagnostic {
                     rule: self.name().to_string(),
                     severity: Severity::Warning,
