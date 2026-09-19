@@ -4,12 +4,16 @@ version = "0.1.0"
 edition = "2024"
 description = "Rust-native developer quality toolkit - local-first, lightweight code analyzer for cleaner, safer Rust"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/korox/korox"
-homepage = "https://github.com/korox/korox"
+repository = "https://github.com/rahulpatle-sol/korox"
+homepage = "https://github.com/rahulpatle-sol/korox"
 documentation = "https://docs.rs/cargo-korox"
 keywords = ["lint", "analyzer", "code-quality", "rust", "clippy", "developer-tools"]
 categories = ["development-tools", "development-tools::debugging", "development-tools::profiling"]
 readme = "README.md"
+
+[lib]
+name = "cargo_korox"
+path = "src/lib.rs"
 
 [[bin]]
 name = "cargo-korox"
