@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="cargo-korox is a Rust-native developer quality toolkit for fast, actionable code diagnostics."
+    />
+    <title>cargo-korox — Rust-native code quality</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header">
+      <nav class="navbar container" aria-label="Main navigation">
+        <a class="brand" href="#" aria-label="korox home">
+          <i class="ri-hammer-line" aria-hidden="true"></i><span>korox</span>
+        </a>
+        <button class="menu-toggle" type="button" aria-controls="site-menu" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="ri-menu-line" aria-hidden="true"></i>
+        </button>
+        <div class="nav-menu" id="site-menu">
+          <a href="#features">Features</a>
+          <a href="#rules">Rules</a>
+          <a href="#install">Install</a>
+          <a href="#config">Config</a>
+          <a href="#commands">Commands</a>
+          <a class="github-button" href="https://github.com/rahulpatle-sol/korox" target="_blank" rel="noreferrer">
+            <i class="ri-github-fill" aria-hidden="true"></i> GitHub
+          </a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <section class="hero section-grid" aria-labelledby="hero-title">
+        <div class="container hero-layout">
+          <div class="hero-copy" data-gsap="hero-copy">
+            <p class="eyebrow"><span class="status-dot"></span> v0.1.0 · developer quality toolkit</p>
+            <h1 id="hero-title">Ship cleaner Rust.<br /><span>Stay in flow.</span></h1>
+            <p class="hero-subtitle">
+              <strong>cargo-korox</strong> catches quality issues before they become review comments.
+              Fast, local, and built for the Rust toolchain.
+            </p>
+            <div class="install-command code-block" data-copy-value="cargo install cargo-korox">
+              <div class="code-header"><span>terminal</span><button class="copy-button" type="button" aria-label="Copy install command"><i class="ri-file-copy-line" aria-hidden="true"></i><span>Copy</span></button></div>
+              <code><span class="prompt">$</span> cargo install cargo-korox</code>
+            </div>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#install">Get started <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
+              <a class="button button-secondary" href="https://github.com/rahulpatle-sol/korox" target="_blank" rel="noreferrer"><i class="ri-github-fill" aria-hidden="true"></i> View on GitHub</a>
+            </div>
+          </div>
+          <div class="terminal-window" data-gsap="terminal" aria-label="Example cargo-korox check output">
+            <div class="terminal-bar"><span class="terminal-dots"><i></i><i></i><i></i></span><span>~/projects/atlas</span><i class="ri-more-2-fill" aria-hidden="true"></i></div>
+            <div class="terminal-body">
+              <p><span class="prompt">❯</span> cargo korox check</p>
+              <p class="muted">Checking atlas v0.4.2</p>
+              <p><span class="warn">warning</span>[unnecessary-clone] src/cache.rs:42</p>
+              <p class="indent">value cloned before being moved</p>
+              <p class="suggestion">help: borrow this value instead</p>
+              <p><span class="warn">warning</span>[suspicious-unwrap] src/api.rs:18</p>
+              <p class="indent">unwrap() may panic on an error path</p>
+              <p class="suggestion">help: use ? or handle the error explicitly</p>
+              <p><span class="error">error</span>[error-handling] src/main.rs:27</p>
+              <p class="indent">result is ignored without explanation</p>
+              <p class="summary">✦ 2 warnings · 1 error · finished in 0.08s</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="features" aria-labelledby="features-title">
+        <div class="container">
+          <div class="section-heading" data-gsap="reveal"><p class="eyebrow">Why korox</p><h2 id="features-title">Quality checks that<br /><span>respect your workflow.</span></h2></div>
+          <div class="feature-grid">
+            <article class="feature-card" data-gsap="card"><i class="ri-computer-line"></i><h3>Local First</h3><p>Your code stays on your machine. Instant feedback with no network round trip.</p></article>
+            <article class="feature-card" data-gsap="card"><i class="ri-speed-line"></i><h3>Lightweight</h3><p>Small binary, quick scans, and zero runtime overhead in your application.</p></article>
+            <article class="feature-card" data-gsap="card"><i class="ri-rust-line"></i><h3>Rust Native</h3><p>Designed around Cargo and Rust idioms so it feels like part of the toolchain.</p></article>
+            <article class="feature-card" data-gsap="card"><i class="ri-lightbulb-line"></i><h3>Actionable Diagnostics</h3><p>Clear explanations and fixes, not noisy reports that slow down reviews.</p></article>
+            <article class="feature-card" data-gsap="card"><i class="ri-git-branch-line"></i><h3>Git Aware</h3><p>Focus on changed files or scan the whole workspace when you need the full picture.</p></article>
+            <article class="feature-card" data-gsap="card"><i class="ri-robot-2-line"></i><h3>AI Optional</h3><p>Use deterministic local rules by default. Add AI assistance only when it helps.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-muted" id="rules" aria-labelledby="rules-title">
+        <div class="container">
+          <div class="section-heading split-heading" data-gsap="reveal"><div><p class="eyebrow">Built-in rules</p><h2 id="rules-title">Signal over noise.</h2></div><p>Start with sensible defaults, then tune severity to match your team.</p></div>
+          <div class="table-wrap"><table><caption class="sr-only">cargo-korox built-in rules</caption><thead><tr><th>Rule</th><th>Level</th><th>What it catches</th></tr></thead><tbody>
+            <tr><td><code>unnecessary-clone</code></td><td><span class="tag tag-warn">warn</span></td><td>Clones that can be replaced with a borrow</td></tr>
+            <tr><td><code>suspicious-unwrap</code></td><td><span class="tag tag-warn">warn</span></td><td>Potential panics from unchecked results</td></tr>
+            <tr><td><code>unused-variable</code></td><td><span class="tag tag-suggestion">suggestion</span></td><td>Bindings that are never read</td></tr>
+            <tr><td><code>unnecessary-allocation</code></td><td><span class="tag tag-warn">warn</span></td><td>Heap allocations that add no value</td></tr>
+            <tr><td><code>inefficient-loop</code></td><td><span class="tag tag-warn">warn</span></td><td>Loops with a clearer or faster iterator</td></tr>
+            <tr><td><code>error-handling</code></td><td><span class="tag tag-error">error</span></td><td>Ignored or poorly propagated errors</td></tr>
+            <tr><td><code>unnecessary-conversion</code></td><td><span class="tag tag-suggestion">suggestion</span></td><td>Redundant type conversions</td></tr>
+            <tr><td><code>collection-in-loop</code></td><td><span class="tag tag-warn">warn</span></td><td>Collections rebuilt inside a loop</td></tr>
+            <tr><td><code>inefficient-string-concat</code></td><td><span class="tag tag-warn">warn</span></td><td>Repeated string allocations while concatenating</td></tr>
+            <tr><td><code>redundant-clone</code></td><td><span class="tag tag-warn">warn</span></td><td>Clones whose result is immediately discarded</td></tr>
+          </tbody></table></div>
+        </div>
+      </section>
+
+      <section class="section" id="install" aria-labelledby="install-title">
+        <div class="container">
+          <div class="section-heading" data-gsap="reveal"><p class="eyebrow">Get running</p><h2 id="install-title">From zero to useful<br /><span>in a few commands.</span></h2></div>
+          <div class="code-grid">
+            <div class="code-block"><div class="code-header"><span>Install from crates.io</span><button class="copy-button" type="button" data-copy-target="install-cargo"><i class="ri-file-copy-line" aria-hidden="true"></i><span>Copy</span></button></div><pre><code id="install-cargo">cargo install cargo-korox</code></pre></div>
+            <div class="code-block"><div class="code-header"><span>Build from source</span><button class="copy-button" type="button" data-copy-target="install-source"><i class="ri-file-copy-line" aria-hidden="true"></i><span>Copy</span></button></div><pre><code id="install-source">git clone https://github.com/rahulpatle-sol/korox
+cd korox
+cargo install --path .</code></pre></div>
+            <div class="code-block"><div class="code-header"><span>Verify install</span></div><pre><code>cargo korox --version
+# cargo-korox 0.1.0</code></pre></div>
+            <div class="code-block"><div class="code-header"><span>Basic usage</span></div><pre><code>cd your-rust-project
+cargo korox check</code></pre></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-muted" id="commands" aria-labelledby="commands-title">
+        <div class="container">
+          <div class="section-heading" data-gsap="reveal"><p class="eyebrow">CLI reference</p><h2 id="commands-title">One command.<br /><span>Every workflow.</span></h2></div>
+          <div class="command-layout"><div class="table-wrap"><table><caption class="sr-only">cargo-korox commands</caption><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody>
+            <tr><td><code>check</code></td><td>Analyze the workspace and print diagnostics</td></tr>
+            <tr><td><code>fix</code></td><td>Apply safe, machine-recommended fixes</td></tr>
+            <tr><td><code>explain &lt;rule&gt;</code></td><td>Show guidance for a specific rule</td></tr>
+            <tr><td><code>init</code></td><td>Create a korox.toml configuration file</td></tr>
+            <tr><td><code>config</code></td><td>Inspect or validate current configuration</td></tr>
+          </tbody></table></div><div class="flags-card"><h3>Flags</h3><dl><div><dt><code>--strict</code></dt><dd>Promote warnings to errors</dd></div><div><dt><code>--json</code></dt><dd>Emit machine-readable output</dd></div><div><dt><code>--quiet</code></dt><dd>Only print failures</dd></div><div><dt><code>--changed</code></dt><dd>Scan changed Git files</dd></div><div><dt><code>--verbose</code></dt><dd>Include extra context</dd></div></dl></div></div>
+        </div>
+      </section>
+
+      <section class="section" id="config" aria-labelledby="config-title">
+        <div class="container config-layout"><div class="section-heading" data-gsap="reveal"><p class="eyebrow">Make it yours</p><h2 id="config-title">Configuration<br /><span>without ceremony.</span></h2><p>Commit your policy with the project. Rules can be disabled, tuned, or promoted as your codebase grows.</p></div><div class="code-block"><div class="code-header"><span>korox.toml</span><button class="copy-button" type="button" data-copy-target="config-example"><i class="ri-file-copy-line" aria-hidden="true"></i><span>Copy</span></button></div><pre><code id="config-example"><span class="code-comment"># Project quality policy</span>
+[settings]
+severity = <span class="string">"warn"</span>
+
+[rules]
+unnecessary-clone = <span class="string">"warn"</span>
+suspicious-unwrap = <span class="string">"error"</span>
+unused-variable = <span class="string">"suggestion"</span>
+error-handling = <span class="string">"error"</span>
+inefficient-loop = <span class="string">"off"</span></code></pre><div class="severity-legend"><span><b class="dot-error"></b> error · blocks CI</span><span><b class="dot-warn"></b> warn · review it</span><span><b class="dot-suggestion"></b> suggestion · consider it</span></div></div></div>
+      </section>
+
+      <section class="section section-muted" id="ci-cd" aria-labelledby="ci-title">
+        <div class="container">
+          <div class="section-heading" data-gsap="reveal"><p class="eyebrow">Ship with confidence</p><h2 id="ci-title">Quality checks<br /><span>wherever you build.</span></h2></div>
+          <div class="code-grid"><div class="code-block"><div class="code-header"><span>.github/workflows/korox.yml</span><button class="copy-button" type="button" data-copy-target="ci-example"><i class="ri-file-copy-line" aria-hidden="true"></i><span>Copy</span></button></div><pre><code id="ci-example">name: Korox
+on: [push, pull_request]
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cargo install cargo-korox
+      - run: cargo korox check --strict</code></pre></div><div class="code-block"><div class="code-header"><span>.git/hooks/pre-commit</span><button class="copy-button" type="button" data-copy-target="hook-example"><i class="ri-file-copy-line" aria-hidden="true"></i><span>Copy</span></button></div><pre><code id="hook-example">#!/usr/bin/env sh
+set -e
+cargo fmt -- --check
+cargo korox check --changed</code></pre></div></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer"><div class="container footer-content"><a class="brand" href="#"><i class="ri-hammer-line" aria-hidden="true"></i><span>korox</span></a><p>Rust in. Clean code out.</p><div class="footer-links"><a href="https://github.com/rahulpatle-sol/korox" target="_blank" rel="noreferrer"><i class="ri-github-fill" aria-hidden="true"></i> GitHub</a><span>MIT / Apache-2.0</span></div></div></footer>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
