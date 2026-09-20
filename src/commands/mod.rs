@@ -3,14 +3,18 @@ use crate::rules::{all_rules, RuleContext};
 use crate::diagnostics::{print_diagnostics, Diagnostic};
 use anyhow::Result;
 use colored::Colorize;
+use notify::{Config, Event, RecommendedWatcher, RecursiveMode, Watcher};
 use std::path::PathBuf;
+use std::sync::mpsc::channel;
+use std::time::Duration;
+use tokio::time::sleep;
 
 pub fn run_check(path: &PathBuf, json: bool, quiet: bool, changed: bool) -> Result<Vec<Diagnostic>> {
     let files = if changed {
         get_all_changed_files(path)?
     } else {
         scan_project(path)?
-    };
+    }; 
     
     if files.is_empty() && changed {
         println!("{} No changed Rust files found", "ℹ".cyan());
@@ -235,5 +239,47 @@ pub fn run_explain(rule_name: &str) -> Result<()> {
             println!("Available: unnecessary-clone, suspicious-unwrap, unused-variable, unnecessary-allocation, inefficient-loop, error-handling, unnecessary-conversion, collection-in-loop, inefficient-string-concat, redundant-clone");
         }
     }
+    Ok(())
+}
+
+pub async fn run_watch(path: &PathBuf, json: bool, quiet: bool, changed: bool, debounce_ms: u64) -> Result<()> {
+    println!("{} Watching for changes in {} (debounce: {}ms)", "👀".cyan(), path.display(), debounce_ms);
+    println!("{} Press Ctrl+C to stop", "ℹ".cyan());
+
+    // Initial scan
+    run_check(path, json, quiet, changed)?;
+
+    let (tx, rx) = channel();
+    let mut watcher: RecommendedWatcher = Watcher::new(tx, Config::default().with_poll_interval(Duration::from_millis(debounce_ms)))?;
+    
+    watcher.watch(path, RecursiveMode::Recursive)?;
+
+    let mut last_event_time = std::time::Instant::now();
+    let debounce_duration = Duration::from_millis(debounce_ms);
+
+    loop {
+        match rx.recv_timeout(Duration::from_millis(100)) {
+            Ok(Ok(event)) => {
+                let should_scan = event.paths.iter().any(|p| {
+                    p.extension().map_or(false, |ext| ext == "rs") || p.extension().map_or(false, |ext| ext == "toml")
+                });
+                
+                if should_scan {
+                    last_event_time = std::time::Instant::now();
+                }
+            }
+            Ok(Err(e)) => eprintln!("Watch error: {}", e),
+            Err(std::sync::mpsc::RecvTimeoutError::Timeout) => {},
+            Err(_) => break,
+        }
+
+        // Debounce: wait for quiet period before scanning
+        if last_event_time.elapsed() >= debounce_duration && last_event_time.elapsed() < debounce_duration + Duration::from_millis(100) {
+            println!("\n{} Changes detected, re-scanning...", "🔄".yellow());
+            run_check(path, json, quiet, changed)?;
+            println!("{} Watching...", "👀".cyan());
+        }
+    }
+
     Ok(())
 }

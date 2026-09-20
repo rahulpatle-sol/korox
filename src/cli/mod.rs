@@ -25,6 +25,7 @@ pub enum Commands {
     Check(CheckArgs),
     Fix(FixArgs),
     Explain(ExplainArgs),
+    Watch(WatchArgs),
     Init,
     Config,
 }
@@ -45,6 +46,18 @@ pub struct FixArgs {
 
     #[arg(long, short = 'c')]
     pub changed: bool,
+}
+
+#[derive(Parser)]
+pub struct WatchArgs {
+    #[arg(default_value = ".")]
+    pub path: PathBuf,
+
+    #[arg(long, short = 'c')]
+    pub changed: bool,
+
+    #[arg(long, default_value = "500")]
+    pub debounce: u64,
 }
 
 #[derive(Parser)]
